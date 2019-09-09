@@ -1,112 +1,172 @@
-background no
-use_xft yes
-xftfont 123:size=8
-xftalpha 0.1
-update_interval 1
-total_run_times 0
-own_window yes
-own_window_type desktop
-own_window_transparent yes
-own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
-double_buffer yes
+conky.config = {
 
-maximum_width 400
-draw_shades no
-draw_outline no
-draw_borders no
-draw_graph_borders no
-default_color lightgray
-default_shade_color red
-default_outline_color green
-alignment top_right
-gap_x 24
+	-- position
+    	alignment = 'top_right',
+	gap_x = 8,
+	gap_y = 20,
 
-no_buffers yes
-uppercase no
-cpu_avg_samples 2
-net_avg_samples 2
-override_utf8_locale yes
-use_spacer none
+	--size
+	minimum_width = 240,
+	minimum_height = 1000,
+	maximum_width = 240,
+	short_units = true ,
+	pad_percents =  1,
+
+	-- background	
+    	background = yes,
+
+	-- borders
+    	border_width = 1,
+	
+	-- color
+	default_color = 'white',
+	default_outline_color = 'white',
+    	default_shade_color = 'white',
+    
+	-- frame
+	draw_borders = false,
+	
+	stippled_borders = 0,
+    	draw_graph_borders = true,
+    	draw_outline = false,
+    
+	-- shadows
+	draw_shades = false,
+
+    	-- better fonts
+	use_xft = true,
+	
+	-- font = 'DejaVu Sans Mono:size=12',
+    	-- no_buffers = true,
+    	out_to_console = false,
+    	out_to_stderr = false,
+    	extra_newline = false,
+    
+	-- window settings
+	own_window = true,
+    	own_window_class = 'Conky',
+        own_window_transparent = true,
+	-- own_window_argb_visual = true,
+	-- own_window_argb_value = 0,
+	own_window_type = 'desktop',
+    
+	-- update interval
+	update_interval = 0.5,
+	total_run_times = 0,
+
+	uppercase = false,
+    	use_spacer = 'none',
+   
+	-- anti-flickering
+	double_buffer = true,
+
+	show_graph_scale = false,
+    	show_graph_range = false,
+	-- text_buffer_size = 1000,
+    	font = 'Liberation Sans:bold:size=9', --important for shades
+    	template0 = 'Liberation Sans:bold:size=10',
+    	template1 = 'Liberation Mono:bold:size=12',
+    	template2 = 'Liberation Mono:bold:size=40',
+    	template3 = 'Liberation Mono:bold:size=5',
+    	template4 = 'Liberation Mono:bold:size=9'
+}
 
 
-TEXT
-${alignc 32}${font Open Sans:size=20}${color lightgray}Debian${color dodgerblue3} GNU/Linux$font$color
-${alignc}${font Open Sans:size=10}${color white}${execi 30 users | cut -c1-7}@$nodename
-$color${font}${font Open Sans:size=20}$alignr${time %H:%M}$font
-${color dodgerblue3}${font Open Sans:Bold:size=10}Date${hr 2}$color$font
-$color${font Open Sans:size=12}$alignr${time %a}, ${time %d %b %Y}$font$color
+-- Host Name/Username/Workspace/Uptime Section
+conky.text = [[${alignc}${font El Abogado Loco:bold:pixelsize=38}${color #FFFFFF}$nodename${font}
+${voffset 1}${alignc}${font arial:bold:pixelsize=12}${color #FFA300} $user_names | $desktop : $desktop_name | $uptime_short${font}
+${voffset -5}${alignc}${color EAEAEA}${font Arial:pixelsize=44}${time %l:%M.}${font Arial:pixelsize=38}${time %S}${font Arial:pixelsize=28}${time %p}
+${voffset -15}${alignc}${font Arial:bold:pixelsize=14}${color #FFA300}${time %A %d %B %Y}
+
+####  Information/GPU/Motherboard Section
+${voffset -7}${font $template1}${color #FFFFFF}Information ${hr 2}${font $template4}${color #FFA300}
+ ${alignc}Linux ${kernel} on ${machine}${color green}
+##GPU Temperature:  ${alignr}${execi 15 sensors | head -n 10 | grep -i "temp1" | cut -c 15-22}
+MB Temperature: ${alignr}${execi 15 sensors | tail -n 15 | grep -i "temp1" | cut -c 15-22}
+##MB Fan Speed: ${alignr}${execi 15 sensors | grep -i "fan2" | cut -c 14-21}
+
+#### CPU/Processor Section
+${voffset -7}${font $template1}${color #FFFFFF}Processor ${hr 2}${font $template4}${color #FFA300}
+${alignc}${execi 100 lscpu | grep -i "model name" | cut -c 20-}${color green}
+#CPU Temperature: ${alignr}${execi 15 sensors | grep -i "temp2" | cut -c 15-22}
+#CPU Fan Speed: ${alignr}${execi 15 sensors | grep -i "fan1" | cut -c 14-21}
+${color green}CPU 1 | ${cpu cpu1}%${alignr}CPU 2 | ${cpu cpu2}%${color #FFA300}
+${cpugraph cpu1 8,115 FFA300 FFA300}${alignr}${cpugraph cpu2 8,115 FFA300 FFA300}
+${color green}CPU 3 | ${cpu cpu3}%${alignr}CPU 4 | ${cpu cpu4}%${color #FFA300}
+${cpugraph cpu3 8,115 FFA300 FFA300}${alignr}${cpugraph cpu4 8,115 FFA300 FFA300}
+${color green}CPU 5 | ${cpu cpu5}%${alignr}CPU 6 | ${cpu cpu6}%${color #FFA300}
+${cpugraph cpu5 8,115 FFA300 FFA300}${alignr}${cpugraph cpu6 8,115 FFA300 FFA300}
+${color green}CPU 7 | ${cpu cpu7}%${alignr}CPU 8 | ${cpu cpu8}%${color #FFA300}
+${cpugraph cpu7 8,115 FFA300 FFA300}${alignr}${cpugraph cpu8 8,115 FFA300 FFA300}
+${color green}${top name 1}${alignr}${top cpu }%
+
+#### Memory Section
+${voffset -7}${font $template1}${color #FFFFFF}Memory ${hr 2}${font $template4}${color green}
+#Showing memory part with TOP 3 
+RAM:$mem / $memmax ${alignr} $memperc%
+${color #FFA300}${membar 8,240 FFA300 FFA300}${color green}
+SWAP:$swap / $swapmax ${alignr} $swapperc%
+${color #FFA300}${swapbar 8,240 FFA300 FFA300}${color green}
+${color green}${top_mem name 1}${alignr}${top_mem mem 1}%
+${color green}${top_mem name 2}${alignr}${top_mem mem 2}%
+${color green}${top_mem name 3}${alignr}${top_mem mem 3}%
 
 # Music
-${color dodgerblue3}${font Open Sans:Bold:size=10}Music${hr 2}$color$font
-${if_running audacious}${exec audtool --current-song | cut -c1-50}
-${exec  audtool --current-song-bitrate-kbps} kbps / ${exec audtool --current-song-length} ${color dodgerblue3} ${execbar expr $(audtool --current-song-output-length-seconds) \* 100 / $(audtool --current-song-length-seconds)}$endif
+#${voffset -7}${color #FFFFFF}${font $template1}Music${hr 2}${font $template4}${color green}
+#${if_running audacious}${color green}${exec audtool --current-song | cut -c1-50}
+#${color green}${exec  audtool --current-song-bitrate-kbps} kbps / ${exec audtool --current-song-length} ${color FFA300} ${execbar expr $(audtool --current-song-output-length-seconds) \* 100 / $(audtool --current-song-length-seconds)}$endif
+${voffset -7}${if_running strawberry}${if_match "Playing" == "${execi 10 ~/scripts/clementine.sh status}"}${color FFFFFF}${font $template1}Music ${hr 2}${font $template0}${color green}
+${font $template4}${color green}${voffset 2}
+${goto 91}${execi 10 ~/scripts/clementine.sh artist}
+${goto 91}${execi 10 ~/scripts/clementine.sh title}
+${goto 91}${execi 10 ~/scripts/clementine.sh album}
 
-# SYS
-${font Open Sans:Bold:size=10}${color dodgerblue3}SYSTEM${hr 2}$color${font}
-$sysname $kernel $alignr $machine
-Uptime $alignr $uptime
-MB Temperature $alignr ${execi 30 sensors | grep 'SYSTIN:' | cut -c17-18}°C
-GPU Temperature $alignr ${execi 30 sensors | grep 'temp1:' | cut -c16-17}°C
+${image ~/scripts/cover.jpg -p 1, 480 -s 75x75 -f 10}${execi 10 ~/scripts/clementine.sh cover}
+${color #FFA300}${voffset -12}${execibar 2 ~/scripts/clementine.sh progress}
+$endif$endif
+#### Disk Partitions Section
+${voffset -7}# Showing disk partitions: root, home  etc. 
+${offset 0}${font $template1}${color #FFFFFF}Disks ${hr 2}${font $template0}${color green}
+${color #FFA300}${diskiograph 8,240 FFA300 FFA300}
+${color #FFFFFF}FS / (size)${goto 170}${alignc}Used${alignr}Free${font $template4}
+${color green}/ (${fs_size /})${goto 170}${alignc}${fs_used /}${alignr}${fs_free /}
+##${color green}/home (${fs_size /home})${goto 170}${alignc}${fs_used /home}${alignr}${fs_free /home}
+##${color green}/**** (${fs_size /****})${goto 170}${alignc}${fs_used /****}${alignr}${fs_free /****}
+${color green}/mnt/WIN1 (${fs_size /mnt/WIN1})${goto 170}${alignc}${fs_used /mnt/WIN1}${alignr}${fs_free /mnt/WIN1}
+${color green}/mnt/WIN2 (${fs_size /mnt/WIN2})${goto 170}${alignc}${fs_used /mnt/WIN2}${alignr}${fs_free /mnt/WIN2}
+#${color green}/*****/**** (${fs_size /*****/****})${goto 170}${alignc}${fs_used /*****/****}${alignr}${fs_free /*****/****}
+#${color green}/*****/**** (${fs_size /*****/****})${goto 170}${alignc}${fs_used /*****/****}${alignr}${fs_free /*****/****}
+#${color green}/*****/**** (${fs_size /*****/****})${goto 170}${alignc}${fs_used /*****/****}${alignr}${fs_free /*****/****}
+#${color green}/*****/**** (${fs_size /*****/****})${goto 170}${alignc}${fs_used /*****/****}${alignr}${fs_free /*****/****}
+#${color green}/*****/**** (${fs_size /*****/****})${goto 170}${alignc}${fs_used /*****/****}${alignr}${fs_free /*****/****}
 
-# CPU
-${font Open Sans:Bold:size=10}${color dodgerblue3}CPU${hr 2}
-$color${font}Intel i5 2500k $alignr ${freq_g cpu0}GHz
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-${font}Core 0 ${color dodgerblue3}${execi 30 sensors | grep 'Core 0:' | cut -c18-19}°C${color} @ ${cpu cpu1} % $alignc ${color dodgerblue3}${cpubar cpu1}${color}
-${font}Core 1 ${color dodgerblue3}${execi 30 sensors | grep 'Core 1:' | cut -c18-19}°C${color} @ ${cpu cpu2} % $alignc ${color dodgerblue3}${cpubar cpu2}${color}
-${font}Core 2 ${color dodgerblue3}${execi 30 sensors | grep 'Core 2:' | cut -c18-19}°C${color} @ ${cpu cpu3} % $alignc ${color dodgerblue3}${cpubar cpu3}${color}
-${font}Core 3 ${color dodgerblue3}${execi 30 sensors | grep 'Core 3:' | cut -c18-19}°C${color} @ ${cpu cpu4} % $alignc ${color dodgerblue3}${cpubar cpu4}${color}
+#### Network Section
+${voffset -7}${font $template1}${color #FFFFFF}Network ${hr 2}${font $template4}${color green}
+Download ${downspeedf enp9s0}kb/s ${alignr}Upload ${upspeedf enp9s0}kb/s
+${color #FFA300}${downspeedgraph enp9s0 8,115 FFA300 FFA300 1 -t -l} $alignr}${upspeedgraph enp9s0 8,115 FFA300 FFA300 1 -t -l}${color} 
+Local IP${alignr}${addr enp9s0}
+Public IP${alignr}${execi 3600 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1}
 
-# TOP
-${font Open Sans:Bold:size=10}${color dodgerblue3}TOP${hr 2}
-$color${font}${font Open Sans:bold:size=8.5}PROCESS $alignr CPU USAGE$font
-${top name 1}${alignr}${top cpu 1} %
-${top name 2}${alignr}${top cpu 2} %
-${top name 3}${alignr}${top cpu 3} %
-${top name 4}${alignr}${top cpu 4} %
-${top name 5}${alignr}${top cpu 5} %
+##### News Feed
+${voffset -7}${font $template1}${color #FFFFFF}Debian News ${hr 2}${font $template4}${color green}
+${rss https://www.debian.org/News/news 1 item_titles 3}
 
-# MEMORY
-${font Open Sans:Bold:size=10}${color dodgerblue3}MEMORY${hr 2}
-$color${font}${font Open Sans:bold:size=8.5}RAM$font
-$mem / $memmax $alignr $memperc %
-$membar
+S H O R T C U T    K E Y S
+${hr}
+Alt+F2$alignr Run Dialog
+Alt+F3$alignr Alt Menu
+Super+Space$alignr Main Menu
+Super+Tab$alignr Client Menu
+Super+t$alignr Terminal
+Super+f$alignr File Manager
+Super+e$alignr Editor
+Super+m$alignr Media Player
+Super+w$alignr Web Browser
+Super+h$alignr Task Manager
+Super+l$alignr Lock Screen
+Super+v$alignr Volume Control
+Super+x$alignr Logout
+PrtSc$alignr Screenshot
 
-${font Open Sans:bold:size=8.5}SWAP$font
-$swap / $swapmax $alignr $swapperc
-${swapbar};
 
-# NETWORK
-${font Open Sans:Bold:size=10}${color dodgerblue3}Network${hr 2}
-$color${font Open Sans:bold:size=8.5}External IP ${font}${alignr}${execi 3600 wget -O - ipinfo.io/ip | tail}$font
-#${font Open Sans:bold:size=8.5}eth0 $font$alignr ${addr enp0s25}
-#down $alignr ${downspeedf enp0s25} kb/s
-#up $alignr ${upspeedf enp0s25} kb/s
-#down total ${totaldown enp0s25} $alignr up total ${totalup enp0s25}
-${font Open Sans:bold:size=8.5}WIFI $font$alignr ${addr wlp2s0}
-down $alignr ${downspeedf wlp2s0} kb/s
-up $alignr ${upspeedf wlp2s0} kb/s
-down total ${totaldown wlp2s0} $alignr up total ${totalup wlp2s0}
-
-# HDD
-${font Open Sans:Bold:size=10}${color dodgerblue3}Disks${hr 2}
-$color${font Open Sans:bold:size=8.5}/dev/sda $font$alignr ${execi 30 sudo hddtemp /dev/sda | grep '/dev/sda:' | cut -c31-32}°C
-${font Open Sans:bold:size=8.5}ROOT $font$font$alignr ${fs_type /}
-${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /} %
-${fs_bar /}
-${font Open Sans:Bold:size=10}${color dodgerblue3}Keys${hr 2}
-$color${font Open Sans:bold:size=8.5}
- | +Alt+F2$alignr Run Dialog
- | + Alt+F3$alignr Alt Menu
- | + Super+Space$alignr Main Menu
- | + Super+Tab$alignr Client Menu
- | + Super+t$alignr Terminal
- | + Super+f$alignr File Manager
- | + Super+e$alignr Editor
- | + Super+m$alignr Media Player
- | + Super+w$alignr Web Browser
- | + Super+h$alignr Task Manager
- | + Super+l$alignr Lock Screen
- | + Super+v$alignr Volume Control
- | + Super+x$alignr Logout
- | + PrtSc$alignr Screenshot
+]]
